@@ -1,7 +1,7 @@
 {
   "name": "Telegram Userbot",
   "description": "A Pyrogram based Telegram Userbot",
-  "repository": "https://github.com/YOUR_USERNAME/YOUR_REPO",
+  "repository": "https://github.com/officialrohit928-lang/myuserbot",
   "keywords": ["telegram", "userbot", "pyrogram"],
   "env": {
     "API_ID": {
