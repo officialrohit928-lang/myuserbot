@@ -1,10 +1,9 @@
 import time
 import os
 import asyncio
-from pyrogram import Client, filters
+from pyrogram import Client, filters, idle
 from pyrogram.types import Message
 
-# ───── CONFIG ─────
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 OWNER_ID = int(os.getenv("OWNER_ID"))
@@ -35,7 +34,7 @@ async def uptime(_, m: Message):
     up = int(time.time() - start_time)
     await m.edit(f"⏱ Uptime: `{up}s`")
 
-# ───── FUN REACTIONS ─────
+# ───── FUN ─────
 @app.on_message(filters.me & filters.command("love", "."))
 async def love(_, m): await m.edit("❤️ Love is in the air ✨")
 
@@ -60,7 +59,7 @@ async def auto(_, m):
     if AUTO_REPLY:
         await m.reply("👋 Abhi busy hoon, baad me baat karte hain")
 
-# ───── PROFILE TOOLS ─────
+# ───── PROFILE ─────
 @app.on_message(filters.me & filters.command("profile", ".") & filters.reply)
 async def profile(_, m):
     u = m.reply_to_message.from_user
@@ -89,22 +88,19 @@ async def copyname(_, m):
     name = m.reply_to_message.from_user.first_name
     await m.edit(f"📋 Copied name:\n`{name}`")
 
-# ───── TAG COMMANDS ─────
+# ───── TAGS ─────
 @app.on_message(filters.me & filters.command("tagall", "."))
 async def tagall(_, m):
     if m.chat.type == "private":
         return await m.edit("❌ Group only")
-
     text = "🔔 **Tag All**\n"
     count = 0
-
     async for mem in app.get_chat_members(m.chat.id):
         if count >= 10:
             break
         if not mem.user.is_bot:
             text += f"[{mem.user.first_name}](tg://user?id={mem.user.id}) "
             count += 1
-
     await m.edit(text)
 
 @app.on_message(filters.me & filters.command("onetag", "."))
@@ -125,8 +121,6 @@ async def adminstag(_, m):
 # ───── ADMIN ─────
 @app.on_message(filters.me & filters.command("ban", ".") & filters.reply)
 async def ban(_, m):
-    if m.chat.type == "private":
-        return
     await m.chat.ban_member(m.reply_to_message.from_user.id)
     await m.edit("🚫 User banned")
 
@@ -135,7 +129,6 @@ async def unban(_, m):
     await m.chat.unban_member(m.chat.id)
     await m.edit("✅ Unbanned")
 
-# ───── BANALL (OWNER ONLY) ─────
 @app.on_message(filters.me & filters.command("banall", "."))
 async def banall(_, m):
     if m.from_user.id != OWNER_ID:
@@ -179,4 +172,12 @@ async def help(_, m):
 .help
 """)
 
-app.run()
+# ───── MAIN LOOP FIX ─────
+async def main():
+    await app.start()
+    print("Userbot started")
+    await idle()
+    await app.stop()
+
+if __name__ == "__main__":
+    asyncio.run(main())
