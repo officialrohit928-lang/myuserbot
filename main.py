@@ -26,7 +26,7 @@ AUTO_REPLY = False
 async def alive(_, m: Message):
     await m.edit("✅ **Userbot Alive & Running**")
 
-@app.on_message(filters.me & filters.command("ping", "."))
+@app.on_message(filters.outgoing & filters.command("ping", prefixes="."))
 async def ping(_, m: Message):
     t1 = time.time()
     x = await m.edit("🏓 Pinging...")
