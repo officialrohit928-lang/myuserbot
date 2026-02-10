@@ -8,7 +8,7 @@ from pyrogram.types import Message
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
-OWNER_ID = 7480255911  # 👈 Yaha apna Telegram ID daala
+OWNER_ID = 7480255911  
 
 print("API_ID:", bool(API_ID))
 print("API_HASH:", bool(API_HASH))
@@ -146,6 +146,15 @@ async def banall(_, m: Message):
     if m.chat.type == "private":
         return await m.edit("❌ Group me use karo")
 
+    # Check if user is owner
+    if m.from_user.id != OWNER_ID:
+        return await m.edit("❌ Sirf owner hi ye command use kar sakta hai")
+
+    # Check if bot has admin permissions
+    me = await app.get_chat_member(m.chat.id, "me")
+    if not me.can_restrict_members:
+        return await m.edit("❌ Userbot ke paas ban karne ki permission nahi hai")
+
     await m.edit("⚠️ BanAll started...")
 
     count = 0
@@ -155,11 +164,12 @@ async def banall(_, m: Message):
                 await m.chat.ban_member(mem.user.id)
                 count += 1
                 await asyncio.sleep(0.3)
-        except:
-            pass
+        except Exception as e:
+            # Show failed bans for debugging
+            await m.reply(f"❌ Failed to ban {mem.user.first_name} | Error: {e}")
 
     await m.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
-
+    
 # ───── HELP ─────
 @app.on_message(filters.me & filters.command("help", "."))
 async def help(_, m: Message):
