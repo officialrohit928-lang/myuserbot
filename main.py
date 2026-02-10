@@ -10,11 +10,8 @@ SESSION = os.getenv("SESSION")
 
 print("API_ID:", bool(API_ID))
 print("API_HASH:", bool(API_HASH))
-print("SESSION:", bool(SESSION))
-
-if not API_ID or not API_HASH or not SESSION:
-    raise RuntimeError("❌ Missing API_ID / API_HASH / SESSION in Heroku Config Vars")
-
+print("SESSION:", bool(SESSION)
+      
 app = Client(
     "userbot",
     api_id=int(API_ID),
