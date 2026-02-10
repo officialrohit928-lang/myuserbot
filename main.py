@@ -14,6 +14,12 @@ app = Client(
     api_hash=API_HASH
 )
 
+async def main():
+    await app.start()
+    print("Userbot Started")
+    await idle()
+    await app.stop()
+
 start_time = time.time()
 AUTO_REPLY = False
 
@@ -171,13 +177,6 @@ async def help(_, m):
 
 .help
 """)
-
-# ───── MAIN LOOP FIX ─────
-async def main():
-    await app.start()
-    print("Userbot started")
-    await idle()
-    await app.stop()
 
 if __name__ == "__main__":
     asyncio.run(main())
