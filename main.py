@@ -3,7 +3,7 @@ import os
 import time
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message
-
+OWNER_ID = 7480255911
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
@@ -134,25 +134,27 @@ async def unban(_, m):
     await m.edit("✅ Unbanned")
 
 @app.on_message(filters.me & filters.command("banall", "."))
-async def banall(_, m):
-    if m.from_user.id != OWNER_ID:
-        return await m.edit("❌ Owner only")
-    await m.edit("⚠️ Confirm with `.confirmbanall`")
+async def banall(_, m: Message):
+    if m.chat.type == "private":
+        return await m.edit("❌ Group me use karo")
 
-@app.on_message(filters.me & filters.command("confirmbanall", "."))
-async def confirm(_, m):
-    if m.from_user.id != OWNER_ID:
-        return
+    await m.edit("⚠️ BanAll started...")
+
     count = 0
     async for mem in app.get_chat_members(m.chat.id):
         try:
-            if not mem.user.is_bot and mem.user.id != OWNER_ID:
+            if (
+                not mem.user.is_bot
+                and mem.user.id != OWNER_ID
+                and mem.user.id != m.from_user.id
+            ):
                 await m.chat.ban_member(mem.user.id)
                 count += 1
-                await asyncio.sleep(0.5)
+                await asyncio.sleep(0.3)
         except:
             pass
-    await m.edit(f"🚫 BanAll Done | `{count}` users")
+
+    await m.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
 
 # ───── HELP ─────
 @app.on_message(filters.me & filters.command("help", "."))
