@@ -7,7 +7,7 @@ from pyrogram.types import Message
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 OWNER_ID = int(os.getenv("OWNER_ID"))
-
+SESSION_STRING = os.getenv("SESSION")
 app = Client(
     "userbot",
     api_id=API_ID,
