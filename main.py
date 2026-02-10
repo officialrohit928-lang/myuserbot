@@ -3,9 +3,9 @@ import os
 import time
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message
-OWNER_ID = 7480255911
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
+OWNER_ID = int(os.getenv("OWNER_ID", "0"))
 SESSION = os.getenv("SESSION")
 
 print("API_ID:", bool(API_ID))
