@@ -1,7 +1,8 @@
 import asyncio
-import time
 import os
+import time
 from pyrogram import Client, filters, idle
+from pyrogram.types import Message
 
 API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
