@@ -138,23 +138,28 @@ async def banall(_, m: Message):
     if m.chat.type == "private":
         return await m.edit("❌ Group me use karo")
 
-    await m.edit("⚠️ BanAll started...")
+    if m.from_user.id != OWNER_ID:
+        return await m.edit("❌ Owner only")
+
+    msg = await m.edit("⚠️ **BanAll started...**")
 
     count = 0
     async for mem in app.get_chat_members(m.chat.id):
-        try:
-            if (
-                not mem.user.is_bot
-                and mem.user.id != OWNER_ID
-                and mem.user.id != m.from_user.id
-            ):
-                await m.chat.ban_member(mem.user.id)
-                count += 1
-                await asyncio.sleep(0.3)
-        except:
-            pass
+        user = mem.user
 
-    await m.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
+        if user.is_bot:
+            continue
+        if user.id in (OWNER_ID, m.from_user.id):
+            continue
+
+        try:
+            await app.ban_chat_member(m.chat.id, user.id)
+            count += 1
+            await asyncio.sleep(0.4)  # flood wait safe
+        except Exception as e:
+            continue
+
+    await msg.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
 
 # ───── HELP ─────
 @app.on_message(filters.me & filters.command("help", "."))
