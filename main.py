@@ -6,19 +6,17 @@ from pyrogram.types import Message
 
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
-OWNER_ID = int(os.getenv("OWNER_ID"))
-SESSION_STRING = os.getenv("SESSION")
-app = Client(
-    "userbot",
-    api_id=API_ID,
-    api_hash=API_HASH
-)
+SESSION = os.getenv("SESSION")
 
-async def main():
-    await app.start()
-    print("Userbot Started")
-    await idle()
-    await app.stop()
+if not API_ID or not API_HASH or not SESSION:
+    raise RuntimeError("API_ID / API_HASH / SESSION missing in Config Vars")
+
+app = Client(
+    name="userbot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    session_string=SESSION
+)
 
 start_time = time.time()
 AUTO_REPLY = False
@@ -177,6 +175,12 @@ async def help(_, m):
 
 .help
 """)
+
+async def main():
+    await app.start()
+    print("✅ Userbot Started")
+    await idle()
+    await app.stop()
 
 if __name__ == "__main__":
     asyncio.run(main())
