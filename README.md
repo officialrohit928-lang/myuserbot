@@ -2,7 +2,13 @@
 
 A clean & safe Telegram **Userbot** built using **Pyrogram**, fully compatible with **Heroku**.
 
+## 🚀 Deploy on Heroku
+
+Click the button below to deploy instantly 👇
+
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+
+
 
 ## 🔧 Required Config Vars
 API_ID  
