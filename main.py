@@ -1,23 +1,24 @@
-import time
-import os
 import asyncio
+import os
 from pyrogram import Client, filters, idle
-from pyrogram.types import Message
 
-API_ID = int(os.getenv("API_ID"))
+API_ID = os.getenv("API_ID")
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
 
+print("API_ID:", bool(API_ID))
+print("API_HASH:", bool(API_HASH))
+print("SESSION:", bool(SESSION))
+
 if not API_ID or not API_HASH or not SESSION:
-    raise RuntimeError("API_ID / API_HASH / SESSION missing in Config Vars")
+    raise RuntimeError("❌ Missing API_ID / API_HASH / SESSION in Heroku Config Vars")
 
 app = Client(
-    name="userbot",
-    api_id=API_ID,
+    "userbot",
+    api_id=int(API_ID),
     api_hash=API_HASH,
     session_string=SESSION
 )
-
 start_time = time.time()
 AUTO_REPLY = False
 
