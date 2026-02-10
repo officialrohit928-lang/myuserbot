@@ -3,30 +3,34 @@ import os
 import time
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message
-API_ID = os.getenv("API_ID")
+
+# ───── CONFIG ─────
+API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
-OWNER_ID = int(os.getenv("OWNER_ID", "0"))
 SESSION = os.getenv("SESSION")
+OWNER_ID = 7480255911  # 👈 Yaha apna Telegram ID daala
 
 print("API_ID:", bool(API_ID))
 print("API_HASH:", bool(API_HASH))
 print("SESSION:", bool(SESSION))
-      
+
+# ───── CLIENT ─────
 app = Client(
     "userbot",
-    api_id=int(API_ID),
+    api_id=API_ID,
     api_hash=API_HASH,
     session_string=SESSION
 )
+
 start_time = time.time()
 AUTO_REPLY = False
 
-# ───── BASIC ─────
+# ───── BASIC COMMANDS ─────
 @app.on_message(filters.me & filters.command("alive", "."))
 async def alive(_, m: Message):
     await m.edit("✅ **Userbot Alive & Running**")
 
-@app.on_message(filters.outgoing & filters.command("ping", prefixes="."))
+@app.on_message(filters.me & filters.command("ping", "."))
 async def ping(_, m: Message):
     t1 = time.time()
     x = await m.edit("🏓 Pinging...")
@@ -40,32 +44,36 @@ async def uptime(_, m: Message):
 
 # ───── FUN ─────
 @app.on_message(filters.me & filters.command("love", "."))
-async def love(_, m): await m.edit("❤️ Love is in the air ✨")
+async def love(_, m: Message):
+    await m.edit("❤️ Love is in the air ✨")
 
 @app.on_message(filters.me & filters.command("lover", "."))
-async def lover(_, m): await m.edit("💖 Hey lover 😌")
+async def lover(_, m: Message):
+    await m.edit("💖 Hey lover 😌")
 
 @app.on_message(filters.me & filters.command("hug", "."))
-async def hug(_, m): await m.edit("🤗 Virtual hug!")
+async def hug(_, m: Message):
+    await m.edit("🤗 Virtual hug!")
 
 @app.on_message(filters.me & filters.command("kiss", "."))
-async def kiss(_, m): await m.edit("😘 Sending a kiss")
+async def kiss(_, m: Message):
+    await m.edit("😘 Sending a kiss")
 
 # ───── AUTO REPLY ─────
 @app.on_message(filters.me & filters.command("autoreply", "."))
-async def autoreply(_, m):
+async def autoreply(_, m: Message):
     global AUTO_REPLY
     AUTO_REPLY = not AUTO_REPLY
     await m.edit(f"🤖 Auto Reply: `{AUTO_REPLY}`")
 
 @app.on_message(filters.private & ~filters.me)
-async def auto(_, m):
+async def auto(_, m: Message):
     if AUTO_REPLY:
         await m.reply("👋 Abhi busy hoon, baad me baat karte hain")
 
 # ───── PROFILE ─────
 @app.on_message(filters.me & filters.command("profile", ".") & filters.reply)
-async def profile(_, m):
+async def profile(_, m: Message):
     u = m.reply_to_message.from_user
     await m.edit(
         f"👤 **User Info**\n\n"
@@ -75,12 +83,12 @@ async def profile(_, m):
     )
 
 @app.on_message(filters.me & filters.command("bio", ".") & filters.reply)
-async def bio(_, m):
+async def bio(_, m: Message):
     u = await app.get_users(m.reply_to_message.from_user.id)
     await m.edit(f"📝 Bio:\n{u.bio or 'No bio'}")
 
 @app.on_message(filters.me & filters.command("pfp", ".") & filters.reply)
-async def pfp(_, m):
+async def pfp(_, m: Message):
     uid = m.reply_to_message.from_user.id
     async for p in app.get_chat_photos(uid, limit=1):
         await app.send_photo(m.chat.id, p.file_id)
@@ -88,13 +96,13 @@ async def pfp(_, m):
     await m.edit("❌ No profile photo")
 
 @app.on_message(filters.me & filters.command("copyname", ".") & filters.reply)
-async def copyname(_, m):
+async def copyname(_, m: Message):
     name = m.reply_to_message.from_user.first_name
     await m.edit(f"📋 Copied name:\n`{name}`")
 
 # ───── TAGS ─────
 @app.on_message(filters.me & filters.command("tagall", "."))
-async def tagall(_, m):
+async def tagall(_, m: Message):
     if m.chat.type == "private":
         return await m.edit("❌ Group only")
     text = "🔔 **Tag All**\n"
@@ -108,7 +116,7 @@ async def tagall(_, m):
     await m.edit(text)
 
 @app.on_message(filters.me & filters.command("onetag", "."))
-async def onetag(_, m):
+async def onetag(_, m: Message):
     async for mem in app.get_chat_members(m.chat.id):
         if not mem.user.is_bot:
             return await m.edit(
@@ -116,7 +124,7 @@ async def onetag(_, m):
             )
 
 @app.on_message(filters.me & filters.command("adminstag", "."))
-async def adminstag(_, m):
+async def adminstag(_, m: Message):
     text = "👮 **Admins**\n"
     async for mem in app.get_chat_members(m.chat.id, filter="administrators"):
         text += f"[{mem.user.first_name}](tg://user?id={mem.user.id}) "
@@ -124,36 +132,26 @@ async def adminstag(_, m):
 
 # ───── ADMIN ─────
 @app.on_message(filters.me & filters.command("ban", ".") & filters.reply)
-async def ban(_, m):
+async def ban(_, m: Message):
     await m.chat.ban_member(m.reply_to_message.from_user.id)
     await m.edit("🚫 User banned")
 
 @app.on_message(filters.me & filters.command("unban", "."))
-async def unban(_, m):
+async def unban(_, m: Message):
     await m.chat.unban_member(m.chat.id)
     await m.edit("✅ Unbanned")
-
-OWNER_ID = 7480255911 
 
 @app.on_message(filters.me & filters.command("banall", "."))
 async def banall(_, m: Message):
     if m.chat.type == "private":
         return await m.edit("❌ Group me use karo")
 
-    # Sirf owner hi use kar sake
-    if m.from_user.id != OWNER_ID:
-        return await m.edit("❌ Sirf owner use kar sakta hai")
-
     await m.edit("⚠️ BanAll started...")
 
     count = 0
     async for mem in app.get_chat_members(m.chat.id):
         try:
-            if (
-                not mem.user.is_bot
-                and mem.user.id != OWNER_ID
-                and mem.user.id != m.from_user.id
-            ):
+            if not mem.user.is_bot and mem.user.id != OWNER_ID and mem.user.id != m.from_user.id:
                 await m.chat.ban_member(mem.user.id)
                 count += 1
                 await asyncio.sleep(0.3)
@@ -164,7 +162,7 @@ async def banall(_, m: Message):
 
 # ───── HELP ─────
 @app.on_message(filters.me & filters.command("help", "."))
-async def help(_, m):
+async def help(_, m: Message):
     await m.edit("""
 🤖 **Userbot Commands**
 
@@ -184,12 +182,12 @@ async def help(_, m):
 .help
 """)
 
-print("🚀 Starting Userbot...")
+# ───── MAIN ─────
+async def main():
+    await app.start()
+    print("✅ Userbot Started")
+    await idle()
+    await app.stop()
 
-app.start()
-print("✅ Userbot Started")
-
-idle()
-
-app.stop()
-print("🛑 Userbot Stopped")
+if __name__ == "__main__":
+    asyncio.run(main())
