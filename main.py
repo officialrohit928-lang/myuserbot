@@ -10,7 +10,7 @@ SESSION = os.getenv("SESSION")
 
 print("API_ID:", bool(API_ID))
 print("API_HASH:", bool(API_HASH))
-print("SESSION:", bool(SESSION)
+print("SESSION:", bool(SESSION))
       
 app = Client(
     "userbot",
