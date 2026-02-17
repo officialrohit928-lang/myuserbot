@@ -1,21 +1,20 @@
-# 🤖 Pyrogram Userbot (Heroku Ready)
+# 🔥 Rohit Advanced Userbot
 
-A clean & safe Telegram **Userbot** built using **Pyrogram**, fully compatible with **Heroku**.
+Advanced Telegram Userbot with TagAll & OneTag System
 
-## 🚀 Deploy on Heroku
+---
 
-Click the button below to deploy instantly 👇
+## 🚀 Deploy To Heroku
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/officialrohit928-lang/myuserbot)
 
+---
 
+### 🔑 Required Vars
 
-## 🔧 Required Config Vars
-API_ID  
-API_HASH  
-OWNER_ID  
-
-Get API from https://my.telegram.org → API Development Tools
+- API_ID
+- API_HASH
+- SESSION (Pyrogram String Session)
 
 ## ▶️ Start
 Heroku → Resources → worker ON  
