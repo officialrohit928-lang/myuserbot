@@ -8,13 +8,7 @@ from pyrogram.types import Message
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 SESSION = os.getenv("SESSION")
-OWNER_ID = 7480255911  
 
-print("API_ID:", bool(API_ID))
-print("API_HASH:", bool(API_HASH))
-print("SESSION:", bool(SESSION))
-
-# ───── CLIENT ─────
 app = Client(
     "userbot",
     api_id=API_ID,
