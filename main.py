@@ -229,13 +229,5 @@ async def help(_, m: Message):
 
 .help
 """)
-
-# ───── MAIN ─────
-async def main():
-    await app.start()
-    print("✅ Userbot Started")
-    await idle()
-    await app.stop()
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    app.run()
