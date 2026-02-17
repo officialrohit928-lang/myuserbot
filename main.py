@@ -5,13 +5,16 @@ from pyrogram import Client, filters, idle
 from pyrogram.types import Message
 
 # ───── CONFIG ─────
-API_ID = int(os.getenv("API_ID"))
-API_HASH = os.getenv("API_HASH")
-SESSION = os.getenv("SESSION")
+API_ID = os.environ.get("API_ID")
+API_HASH = os.environ.get("API_HASH")
+SESSION = os.environ.get("SESSION")
+
+if not API_ID or not API_HASH or not SESSION:
+    raise ValueError("Environment variables missing!")
 
 app = Client(
     "userbot",
-    api_id=API_ID,
+    api_id=int(API_ID),
     api_hash=API_HASH,
     session_string=SESSION
 )
