@@ -82,47 +82,6 @@ async def profile(_, m: Message):
         f"• ID: `{u.id}`"
     )
 
-@app.on_message(filters.me & filters.command("bio", ".") & filters.reply)
-async def bio(_, m: Message):
-    u = await app.get_users(m.reply_to_message.from_user.id)
-    await m.edit(f"📝 Bio:\n{u.bio or 'No bio'}")
-
-@app.on_message(filters.me & filters.command("pfp", ".") & filters.reply)
-async def pfp(_, m: Message):
-    uid = m.reply_to_message.from_user.id
-    async for p in app.get_chat_photos(uid, limit=1):
-        await app.send_photo(m.chat.id, p.file_id)
-        return
-    await m.edit("❌ No profile photo")
-
-@app.on_message(filters.me & filters.command("copyname", ".") & filters.reply)
-async def copyname(_, m: Message):
-    name = m.reply_to_message.from_user.first_name
-    await m.edit(f"📋 Copied name:\n`{name}`")
-
-# ───── TAGS ─────
-@app.on_message(filters.me & filters.command("tagall", "."))
-async def tagall(_, m: Message):
-    if m.chat.type == "private":
-        return await m.edit("❌ Group only")
-    text = "🔔 **Tag All**\n"
-    count = 0
-    async for mem in app.get_chat_members(m.chat.id):
-        if count >= 10:
-            break
-        if not mem.user.is_bot:
-            text += f"[{mem.user.first_name}](tg://user?id={mem.user.id}) "
-            count += 1
-    await m.edit(text)
-
-@app.on_message(filters.me & filters.command("onetag", "."))
-async def onetag(_, m: Message):
-    async for mem in app.get_chat_members(m.chat.id):
-        if not mem.user.is_bot:
-            return await m.edit(
-                f"👋 [{mem.user.first_name}](tg://user?id={mem.user.id})"
-            )
-
 @app.on_message(filters.me & filters.command("adminstag", "."))
 async def adminstag(_, m: Message):
     text = "👮 **Admins**\n"
@@ -169,6 +128,91 @@ async def banall(_, m: Message):
             await m.reply(f"❌ Failed to ban {mem.user.first_name} | Error: {e}")
 
     await m.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
+
+from pyrogram import Client, filters
+import asyncio
+
+app = Client("my_userbot")
+
+# Stop flags
+tag_running = False
+
+
+# ================== ONETAG ==================
+@app.on_message(filters.me & filters.command("onetag", prefixes="."))
+async def one_tag(client, message):
+    global tag_running
+    tag_running = True
+
+    if not message.chat.type in ["group", "supergroup"]:
+        return await message.reply("❌ This command only works in groups.")
+
+    text = " ".join(message.command[1:])
+    if not text:
+        return await message.reply("❌ Give some text.\nExample: .onetag Hello")
+
+    await message.delete()
+
+    async for member in client.get_chat_members(message.chat.id):
+        if not tag_running:
+            break
+
+        user = member.user
+        if user.is_bot:
+            continue
+
+        mention = user.mention
+        try:
+            await client.send_message(
+                message.chat.id,
+                f"{text} {mention}"
+            )
+            await asyncio.sleep(2)  # delay (important)
+        except:
+            continue
+
+
+# ================== TAGALL ==================
+@app.on_message(filters.me & filters.command("tagall", prefixes="."))
+async def tag_all(client, message):
+    global tag_running
+    tag_running = True
+
+    if not message.chat.type in ["group", "supergroup"]:
+        return await message.reply("❌ This command only works in groups.")
+
+    text = " ".join(message.command[1:])
+    if not text:
+        return await message.reply("❌ Give some text.\nExample: .tagall Hello")
+
+    await message.delete()
+
+    async for member in client.get_chat_members(message.chat.id):
+        if not tag_running:
+            break
+
+        user = member.user
+        if user.is_bot:
+            continue
+
+        mention = user.mention
+        try:
+            await client.send_message(
+                message.chat.id,
+                f"{text} {mention}"
+            )
+            await asyncio.sleep(1.5)
+        except:
+            continue
+
+
+# ================== STOP COMMAND ==================
+@app.on_message(filters.me & filters.command(["cancel", "tagstop"], prefixes="."))
+async def stop_tag(client, message):
+    global tag_running
+    tag_running = False
+    await message.reply("🛑 Tagging Stopped.")
+
     
 # ───── HELP ─────
 @app.on_message(filters.me & filters.command("help", "."))
