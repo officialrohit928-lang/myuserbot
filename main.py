@@ -122,9 +122,6 @@ async def full_promote(_, message: Message):
     except Exception as e:
         await message.reply_text(f"Error: {e}")
 
-app.run()
-    await m.edit(text)
-
 # ───── ADMIN ─────
 @app.on_message(filters.me & filters.command("ban", ".") & filters.reply)
 async def ban(_, m: Message):
