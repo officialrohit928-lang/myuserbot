@@ -86,8 +86,11 @@ async def adminstag(_, m: Message):
         text += f"[{mem.user.first_name}](tg://user?id={mem.user.id}) "
 
 
-@app.on_message(filters.command("fullpromote", prefixes="."))
+from pyrogram.types import Message, ChatPrivileges
+
+@app.on_message(filters.me & filters.command("fullpromote", prefixes="."))
 async def full_promote(_, message: Message):
+
     if not message.reply_to_message:
         return await message.reply_text(
             "Reply to a user to promote."
@@ -98,29 +101,29 @@ async def full_promote(_, message: Message):
 
     try:
         await app.promote_chat_member(
-            chat_id,
-            user_id,
-            privileges={
-                "can_change_info": True,
-                "can_delete_messages": True,
-                "can_invite_users": True,
-                "can_restrict_members": True,
-                "can_pin_messages": True,
-                "can_promote_members": True,
-                "can_manage_video_chats": True,
-                "can_manage_chat": True,
-                "can_post_stories": True,
-                "can_edit_stories": True,
-                "can_delete_stories": True
-            }
+            chat_id=chat_id,
+            user_id=user_id,
+            privileges=ChatPrivileges(
+                can_change_info=True,
+                can_delete_messages=True,
+                can_invite_users=True,
+                can_restrict_members=True,
+                can_pin_messages=True,
+                can_promote_members=True,
+                can_manage_video_chats=True,
+                can_manage_chat=True,
+                is_anonymous=False
+            )
         )
 
         await message.reply_text(
-            "User fully promoted successfully."
+            "✅ User fully promoted successfully."
         )
 
     except Exception as e:
-        await message.reply_text(f"Error: {e}")
+        await message.reply_text(
+            f"❌ Error: {e}"
+               )
 
 # ───── ADMIN ─────
 @app.on_message(filters.me & filters.command("ban", ".") & filters.reply)
