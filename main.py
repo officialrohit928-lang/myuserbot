@@ -161,11 +161,7 @@ async def banall(_, m: Message):
             await m.reply(f"❌ Failed to ban {mem.user.first_name} | Error: {e}")
 
     await m.edit(f"🚫 **BanAll Done**\n\nBanned: `{count}` users")
-
-from pyrogram import Client, filters
 import asyncio
-
-app = Client("my_userbot")
 
 # Stop flags
 tag_running = False
