@@ -3,7 +3,7 @@ import os
 import time
 from pyrogram import Client, filters, idle
 from pyrogram.types import Message
-
+from pyrogram.types import ChatPrivileges
 # ───── CONFIG ─────
 API_ID = os.environ.get("API_ID")
 API_HASH = os.environ.get("API_HASH")
@@ -84,6 +84,45 @@ async def adminstag(_, m: Message):
     text = "👮 **Admins**\n"
     async for mem in app.get_chat_members(m.chat.id, filter="administrators"):
         text += f"[{mem.user.first_name}](tg://user?id={mem.user.id}) "
+
+
+@app.on_message(filters.command("fullpromote", prefixes="."))
+async def full_promote(_, message: Message):
+    if not message.reply_to_message:
+        return await message.reply_text(
+            "Reply to a user to promote."
+        )
+
+    user_id = message.reply_to_message.from_user.id
+    chat_id = message.chat.id
+
+    try:
+        await app.promote_chat_member(
+            chat_id,
+            user_id,
+            privileges={
+                "can_change_info": True,
+                "can_delete_messages": True,
+                "can_invite_users": True,
+                "can_restrict_members": True,
+                "can_pin_messages": True,
+                "can_promote_members": True,
+                "can_manage_video_chats": True,
+                "can_manage_chat": True,
+                "can_post_stories": True,
+                "can_edit_stories": True,
+                "can_delete_stories": True
+            }
+        )
+
+        await message.reply_text(
+            "User fully promoted successfully."
+        )
+
+    except Exception as e:
+        await message.reply_text(f"Error: {e}")
+
+app.run()
     await m.edit(text)
 
 # ───── ADMIN ─────
