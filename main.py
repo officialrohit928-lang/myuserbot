@@ -109,7 +109,7 @@ async def full_promote(_, message: Message):
                 can_invite_users=True,
                 can_restrict_members=True,
                 can_pin_messages=True,
-                can_promote_members=True,
+                can_promote_members=False,
                 can_manage_video_chats=True,
                 can_manage_chat=True,
                 is_anonymous=False
